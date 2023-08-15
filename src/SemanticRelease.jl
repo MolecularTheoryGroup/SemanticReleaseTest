@@ -4,8 +4,8 @@ module SemanticRelease
 
 export greet
 
-function greet()
-    return "Hello, World!"
+function greet(; name::String="World!")
+    return "Hello, $name"
 end
 
 end
