@@ -1,0 +1,49 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  commitlint:  
+    runs-on: ubuntu-latest
+    steps:
+    
+    - uses: actions/checkout@v2
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+
+    - name: Install commitlint 
+      run: npm install @commitlint/config-conventional @commitlint/cli
+
+    - name: Fetch full git history
+      run: |
+        git fetch --prune --unshallow
+    
+    - name: Lint commit messages 
+      env:
+        REPORT_COMMENTS: true 
+      run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+
+  release:
+    needs: commitlint
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14
+        
+    - name: Install dependencies  
+      run: npm install
+    
+    - name: Release  
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+      run: npx semantic-release
