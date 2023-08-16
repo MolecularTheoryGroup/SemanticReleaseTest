@@ -6,7 +6,7 @@ using .SemanticRelease
 
 @testset "SemanticRelease.jl" begin
     @test greet() == "Hello, World!"
-    name = "Bob"
+    name = "Steve"
     @test greet(name) == "Hello, $(name)!"
     # Write your tests here.
 end
